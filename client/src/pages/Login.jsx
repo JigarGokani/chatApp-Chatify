@@ -2,8 +2,10 @@ import React, { useState } from 'react'
 import {Avatar, Button,Container,IconButton,Paper, Stack, TextField, Typography} from "@mui/material"
 import {CameraAlt as CameraAltIcon} from "@mui/icons-material"
 import { VisuallyHiddenInput } from '../components/styles/StyledComponents'
-import {useInputValidation} from "6pp"
+import {useFileHandler, useInputValidation} from "6pp"
 import { usernameValidator } from '../utils/validators'
+
+
 
 
 const Login = () => {
@@ -17,7 +19,7 @@ const Login = () => {
   const username = useInputValidation("",usernameValidator);
   const password = useInputValidation("");
 
-
+const avatar = useFileHandler("single")
     
 
   return( 
@@ -107,7 +109,17 @@ const Login = () => {
         height:"10rem",
         objectFit:"contain"
 
-      }}/>
+      }}
+      src={avatar.preview}
+      />
+
+{
+        avatar.error && (
+          <Typography color="error" variant='caption'>
+            {avatar.error}
+          </Typography>
+        )
+      }
 
       <IconButton
       sx={{
@@ -125,7 +137,7 @@ const Login = () => {
       >
         <>
         <CameraAltIcon/>
-        <VisuallyHiddenInput type='file'/>
+        <VisuallyHiddenInput type='file' onChange={avatar.changeHandler}/>
         </>
 
       </IconButton>
@@ -180,6 +192,7 @@ const Login = () => {
       value={password.value}
       onChange={password.changeHandler}
       />
+
 
       <Button 
       fullWidth  
