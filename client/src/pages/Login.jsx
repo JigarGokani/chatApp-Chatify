@@ -20,10 +20,26 @@ const Login = () => {
   const password = useInputValidation("");
 
 const avatar = useFileHandler("single")
+
+const handleLogin = (e) =>{
+  e.preventDefault()
+}
+
+const handleSignUp = (e) =>{
+  e.preventDefault()
+}
+
     
 
   return( 
-  <Container 
+    <div
+    style={{
+      backgroundImage:
+      "linear-gradient(rgba(200,200,200,0.5),rgba(120,110,220,0.5))"
+    }}
+    >
+
+<Container 
   component={"main"} 
   maxWidth="xs" 
   sx={{
@@ -49,7 +65,9 @@ const avatar = useFileHandler("single")
     <form style={{
       width:"100%",
       marginTop:"1rem",
-    }}>
+    }}
+    onSubmit={handleLogin}
+    >
       <TextField 
       required 
       fullWidth 
@@ -100,7 +118,10 @@ const avatar = useFileHandler("single")
     <form style={{
       width:"100%",
       marginTop:"1rem",
-    }}>
+
+    }}
+    onSubmit={handleSignUp}
+    >
 
       <Stack position={"relative"} width={"10rem"} margin={"auto"}>
       <Avatar 
@@ -223,6 +244,8 @@ const avatar = useFileHandler("single")
     </Paper>
 
   </Container>
+    </div>
+
   )
 }
 
