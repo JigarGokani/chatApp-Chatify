@@ -28,3 +28,20 @@ export const sampleUsers =[{
     _id:"2",
    
 }]
+
+export const sampleNotifications =[{
+   sender:{
+    avatar:["https://www.w3schools.com/howto/img_avatar.png"],
+    name:"Jigar Gokani",
+   },
+    _id:"1",
+   
+},
+{
+    sender:{
+        avatar:["https://www.w3schools.com/howto/img_avatar.png"],
+        name:"Binit Kumar",
+       },
+    _id:"2",
+   
+}]
