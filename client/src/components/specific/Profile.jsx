@@ -7,6 +7,7 @@ const Profile = () => {
   return (
     <Stack
     spacing={"2rem"}
+    height={"100vh"}
     direction={"column"}
     alignItems={"center"}
     >
