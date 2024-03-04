@@ -139,5 +139,26 @@ export const sampleMessage =[
         chat:"chatId2",
         createdAt:"2024-02-12T10:41:30.630Z",
     }
-]
+];
+
+export const dashboardData ={
+    users:[
+        {
+            name:"Jigar Gokani",
+            avatar:"https://www.w3schools.com/howto/img_avatar.png",
+            _id:"1", 
+            username:"jigar_gokani",
+            friends:20,
+            groups:5,
+        },
+        {
+            name:"Jee Doshi",
+            avatar:"https://www.w3schools.com/howto/img_avatar.png",
+            _id:"2", 
+            username:"jee_doshi",
+            friends:24,
+            groups:8,
+        }
+    ]
+}
 
