@@ -1,7 +1,7 @@
 import { Close as CloseIcon, Dashboard as DashboardIcon, ExitToApp as ExitToAppIcon, Groups as GroupsIcon, ManageAccounts as ManageAccountsIcon, Menu as MenuIcon, Message as MessageIcon } from "@mui/icons-material";
 import { Box, Drawer, Grid, IconButton, Stack, Typography, styled } from "@mui/material";
 import React, { useState } from "react";
-import { Link as LinkComponent, useLocation } from "react-router-dom";
+import { Link as LinkComponent, Navigate, useLocation } from "react-router-dom";
 
 const Link = styled(LinkComponent)`
     text-decoration:none;
@@ -22,13 +22,13 @@ const adminTabs = [
     },
     {
         name:"Users",
-        path:"/admin/users-management",
+        path:"/admin/users",
         icon:<ManageAccountsIcon/>
 
     },
     {
-        name:"chats",
-        path:"/admin/chats-management",
+        name:"Chats",
+        path:"/admin/chats",
         icon:<GroupsIcon/>
 
     },
@@ -88,7 +88,7 @@ return (
 )
 }
 
-
+const isAdmin = true;
 
 const AdminLayout = ({children}) => {
 
@@ -99,8 +99,10 @@ const AdminLayout = ({children}) => {
     }
 
     const handleClose = () =>{
-        setIsMobile(false)
+        setIsMobile(false)  
     }
+
+    if(!isAdmin) return <Navigate to="/admin"/>
 
   return (
     <Grid container minHeight={"100vh"}>
