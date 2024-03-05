@@ -193,4 +193,39 @@ export const dashboardData = {
       },
     },
   ],
+
+  messages:[
+    {
+      attachments:[],
+      content:"L#uda ka message hai",
+      _id:"asytvgasg",
+      sender:{
+        avatar:"https://www.w3schools.com/howto/img_avatar.png",
+        name:"Chaman",
+      },
+      chat:"chatId",
+      groupChat:false,
+      createdAt:"2024-02-12T10:41:30.630Z"
+
+    },
+    {
+      attachments:[
+        {
+          public_id:"asdasd 2",
+          url:"https://www.w3schools.com/howto/img_avatar.png"
+        }
+      ],
+      content:"L#uda ka message hai",
+      _id:"asytvgasg 2",
+      sender:{
+        avatar:"https://www.w3schools.com/howto/img_avatar.png",
+        name:"Chaman 2",
+      },
+      chat:"chatId",
+      groupChat:true,
+      createdAt:"2024-02-12T10:41:30.630Z"
+
+    }
+  ]
 };
+
