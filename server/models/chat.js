@@ -11,14 +11,15 @@ const schema = new Schema(
         type:Boolean,
         default:false,
     },
-    creater:{
+    creator:{
        type:Types.ObjectId,
        ref:"User",
     },
-    members:[{
+    members:[
+    {
         type:Types.ObjectId,
         ref:"User",
-     }
+    },
     ],
 },{timestamps:true})
 
