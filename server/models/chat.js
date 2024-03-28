@@ -15,10 +15,11 @@ const schema = new Schema(
        type:Types.ObjectId,
        ref:"User",
     },
-    members:{
+    members:[{
         type:Types.ObjectId,
         ref:"User",
-     },
+     }
+    ],
 },{timestamps:true})
 
 export const Chat = mongoose.models.Chat || model("Chat",schema);

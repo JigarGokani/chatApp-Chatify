@@ -20,6 +20,7 @@ const newUser = async (req, res) => {
     password,
     avatar,
   });
+  
 
   sendToken(res, user, 201, "User Created!!");
 };
