@@ -15,8 +15,9 @@ dotenv.config({
 
 const mongoURL = process.env.MONGO_URL ;
 const port = process.env.PORT || 3000;
+const envMode = process.env.NODE_ENV.trim() || "PRODUCTION";
 
-export const adminSecretKey = process.env.ADMIN_SECRET_KEY ;
+const adminSecretKey = process.env.ADMIN_SECRET_KEY ;
 
 
 connectDB(mongoURL);
@@ -43,6 +44,8 @@ app.get("/",(req,res)=>{
 app.use(errormiddleware)
 
 app.listen(port,()=>{
-    console.log(`App is Listening at the port number ${port}`);
+    console.log(`App is Listening at the port number ${port} in ${envMode} Mode`);
     
 })
+
+export {envMode,adminSecretKey}
