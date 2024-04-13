@@ -1,40 +1,37 @@
-import { Stack } from '@mui/material'
-import React from 'react'
-import ChatItem from '../shared/ChatItem'
-import { bgGradient } from '../../constants/color'
+import { Stack } from "@mui/material";
+import React from "react";
+import ChatItem from "../shared/ChatItem";
 
 const ChatList = ({
-    w = "100%",
-    chats = [],
-    chatId,
-    onlineUsers = [],
-    newMessagesAlert = [
-        {
-            chatId:"",
-            count:0,
-        },
-
-    ],
-    handlleDeleteChat,
+  w = "100%",
+  chats = [],
+  chatId,
+  onlineUsers = [],
+  newMessagesAlert = [
+    {
+      chatId: "",
+      count: 0,
+    },
+  ],
+  handleDeleteChat,
 }) => {
   return (
-    <Stack width={w} direction={"column"} overflow={"auto"} height={"100%"}
-    
-    
-    >
-        {chats?.map((data,index)=>{
+    <Stack width={w} direction={"column"} overflow={"auto"} height={"100%"}>
+      {chats?.map((data, index) => {
+        const { avatar, _id, name, groupChat, members } = data;
 
-            const{avatar,_id,name,groupChat,members} = data;
+        const newMessageAlert = newMessagesAlert.find(
+          ({ chatId }) => chatId === _id
+        );
 
-            const newMessageAlert = newMessagesAlert.find(
-                ({chatId}) => chatId === _id
-            )
+        const isOnline = members?.some((member) =>
+          onlineUsers.includes(member)
+        );
 
-            const isOnline = members?.some((member)=>onlineUsers.includes(_id))
-
-            return <ChatItem 
+        return (
+          <ChatItem
             index={index}
-            newMessageAlert={newMessageAlert} 
+            newMessageAlert={newMessageAlert}
             isOnline={isOnline}
             avatar={avatar}
             name={name}
@@ -42,11 +39,12 @@ const ChatList = ({
             key={_id}
             groupChat={groupChat}
             sameSender={chatId === _id}
-            handleDeleteChat={handlleDeleteChat}
-            />
-        })}
+            handleDeleteChat={handleDeleteChat}
+          />
+        );
+      })}
     </Stack>
-  )
-}
+  );
+};
 
-export default ChatList
+export default ChatList;

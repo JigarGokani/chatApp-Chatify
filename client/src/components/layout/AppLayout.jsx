@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from './Header'
 import  Title  from '../shared/Title'
 import { Drawer, Grid, Skeleton } from '@mui/material'
@@ -26,6 +26,8 @@ const AppLayout = () =>(WrappedComponent) => {
     const { user } = useSelector((state) => state.auth);
     const { newMessagesAlert } = useSelector((state) => state.chat);
     const { isLoading, data, isError, error, refetch } = useMyChatsQuery("");
+    const [onlineUsers, setOnlineUsers] = useState([]);
+
 
     useErrors([{ isError, error }]);
 
@@ -57,7 +59,7 @@ const AppLayout = () =>(WrappedComponent) => {
               chatId={chatId}
               handleDeleteChat={handleDeleteChat}
               newMessagesAlert={newMessagesAlert}
-            //   onlineUsers={onlineUsers}
+              onlineUsers={onlineUsers}
             />
           </Drawer>
         )}
