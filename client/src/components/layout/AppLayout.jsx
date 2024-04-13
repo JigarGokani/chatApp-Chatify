@@ -12,6 +12,7 @@ import { useErrors } from '../../hooks/hook'
 import { setIsMobile } from '../../redux/reducers/misc'
 import { getOrSaveFromStorage } from '../../lib/features'
 import { NEW_MESSAGE_ALERT } from '../../constants/events'
+import { getSocket } from '../../socket'
 
 
 
@@ -21,6 +22,9 @@ const AppLayout = () =>(WrappedComponent) => {
     const params = useParams();
     const dispatch = useDispatch();
     const chatId = params.chatId;
+
+    const socket = getSocket();
+    
 
     const { isMobile } = useSelector((state) => state.misc);
     const { user } = useSelector((state) => state.auth);
@@ -84,7 +88,7 @@ const AppLayout = () =>(WrappedComponent) => {
             )}
             </Grid>
             <Grid item xs={12} sm={8} md={5} lg={6} height={"100%"}>
-                <WrappedComponent {...props}/>
+                <WrappedComponent {...props} chatId = {chatId} user={user} />
             </Grid>
 
         <Grid

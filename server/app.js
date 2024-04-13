@@ -15,6 +15,8 @@ import {v4 as uuid} from "uuid"
 import { getSockets } from "./lib/helper.js";
 import { Message } from "./models/message.js";
 import cors from "cors"
+import { corsOptions } from "./constants/config.js";
+import { socketAuthenticator } from "./middlewares/auth.js";
 
 dotenv.config({
     path:"./.env",
@@ -37,16 +39,15 @@ cloudinary.config({
 
 const app = express();
 const server = createServer(app);
-const io = new Server(server,{})
+const io = new Server(server,{
+    cors:corsOptions,
+})
 
 
 // Using Middlewares Here
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({
-    origin:["http://localhost:5173","http://localhost:4173",process.env.CLIENT_URL,],
-    credentials:true,
-}))
+app.use(cors(corsOptions))
 
 // Mouting the routes
 app.use("/api/v1/user",userRoute);
@@ -59,12 +60,16 @@ app.get("/",(req,res)=>{
     res.send("Welcome to our Chatify App!")
 })
 
+io.use((socket,next)=>{
+    cookieParser()(socket.request,socket.request.res,async(err)=>{
+       await socketAuthenticator(err,socket,next)
+    })
+})
+
 io.on("connection",(socket)=>{
 
-    const user ={
-        _id:"asdasd",
-        name:"Nambo"
-    }
+    const user = socket.user;
+    
     userSocketIDs.set(user._id.toString(),socket.id);
 
     console.log("A User is Connected",socket.id);
@@ -89,6 +94,8 @@ io.on("connection",(socket)=>{
             sender:user._id,
             chat:chatId,
         }
+
+        
 
         const membersSocket = getSockets(members);
         io.to(membersSocket).emit(NEW_MESSAGE,{
