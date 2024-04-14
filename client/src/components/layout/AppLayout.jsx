@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Header from './Header'
 import  Title  from '../shared/Title'
 import { Drawer, Grid, Skeleton } from '@mui/material'
 import ChatList from '../specific/ChatList'
 import { sampleChats } from '../../constants/sampleData'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import Profile from '../specific/Profile'
 import { useMyChatsQuery } from '../../redux/api/api'
 import { useDispatch, useSelector } from 'react-redux'
-import { useErrors } from '../../hooks/hook'
+import { useErrors, useSocketEvents } from '../../hooks/hook'
 import { setIsMobile } from '../../redux/reducers/misc'
 import { getOrSaveFromStorage } from '../../lib/features'
-import { NEW_MESSAGE_ALERT } from '../../constants/events'
+import { NEW_MESSAGE_ALERT, NEW_REQUEST, ONLINE_USERS, REFETCH_CHATS } from '../../constants/events'
 import { getSocket } from '../../socket'
+import { incrementNotification, setNewMessagesAlert } from '../../redux/reducers/chat'
 
 
 
@@ -20,6 +21,9 @@ const AppLayout = () =>(WrappedComponent) => {
   return (props)=> {
 
     const params = useParams();
+    const navigate = useNavigate();
+
+
     const dispatch = useDispatch();
     const chatId = params.chatId;
 
@@ -35,6 +39,8 @@ const AppLayout = () =>(WrappedComponent) => {
 
     useErrors([{ isError, error }]);
 
+    
+
     useEffect(() => {
         getOrSaveFromStorage({ key: NEW_MESSAGE_ALERT, value: newMessagesAlert });
       }, [newMessagesAlert]);
@@ -47,6 +53,36 @@ const AppLayout = () =>(WrappedComponent) => {
 
     const handleMobileClose = () => dispatch(setIsMobile(false));
 
+    const newMessageAlertListener = useCallback(
+      (data) => {
+        if (data.chatId === chatId) return;
+        dispatch(setNewMessagesAlert(data));
+      },
+      [chatId]
+    );
+    const newRequestListener = useCallback(() => {
+      dispatch(incrementNotification());
+    }, [dispatch]);
+
+    const refetchListener = useCallback(() => {
+      refetch();
+      navigate("/");
+    }, [refetch, navigate]);
+
+    const onlineUsersListener = useCallback((data) => {
+      setOnlineUsers(data);
+    }, []);
+
+    const eventHandler = {
+      [NEW_MESSAGE_ALERT]: newMessageAlertListener,
+      [NEW_REQUEST]: newRequestListener,
+      [REFETCH_CHATS]: refetchListener,
+      [ONLINE_USERS]: onlineUsersListener,
+
+      
+    };
+
+    useSocketEvents(socket,eventHandler)
 
     return (
         <>

@@ -232,6 +232,7 @@ const sendAttachments = TryCatch(async (req, res, next) => {
     Chat.findById(chatId),
     User.findById(req.user, "name"),
   ]);
+  
 
   if (!chat) return next(new ErrorHandler("Chat not found", 404));
 
@@ -240,6 +241,7 @@ const sendAttachments = TryCatch(async (req, res, next) => {
 
   //   Upload files here
   const attachments = await uploadFilesToCloudinary(files);
+  
 
   const messageForDB = {
     content: "",

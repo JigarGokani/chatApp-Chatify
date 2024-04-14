@@ -33,12 +33,14 @@ const FileMenu = ({ anchorE1, chatId }) => {
   const fileChangeHandler = async (e, key) => {
     const files = Array.from(e.target.files);
 
+    
     if (files.length <= 0) return;
 
     if (files.length > 5)
       return toast.error(`You can only send 5 ${key} at a time`);
 
     dispatch(setUploadingLoader(true));
+    
 
     const toastId = toast.loading(`Sending ${key}...`);
     closeFileMenu();
@@ -49,7 +51,10 @@ const FileMenu = ({ anchorE1, chatId }) => {
       myForm.append("chatId", chatId);
       files.forEach((file) => myForm.append("files", file));
 
+      
+
       const res = await sendAttachments(myForm);
+      
 
       if (res.data) toast.success(`${key} sent successfully`, { id: toastId });
       else toast.error(`Failed to send ${key}`, { id: toastId });

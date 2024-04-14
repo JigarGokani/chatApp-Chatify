@@ -10,17 +10,27 @@ import { InputBox } from "../components/styles/StyledComponents";
 import FileMenu from "../components/dialogs/FileMenu";
 import MessageComponent from "../components/shared/MessageComponent";
 import { getSocket } from "../socket";
-import { NEW_MESSAGE } from "../constants/events";
+import {
+  CHAT_JOINED,
+  CHAT_LEAVED,
+  NEW_MESSAGE,
+  START_TYPING,
+  STOP_TYPING,
+} from "../constants/events";
 import { useChatDetailsQuery, useGetMessagesQuery } from "../redux/api/api";
 import { useErrors, useSocketEvents } from "../hooks/hook";
 import { useInfiniteScrollTop } from "6pp";
 import { useDispatch } from "react-redux";
 import { setIsFileMenu } from "../redux/reducers/misc";
+import { removeNewMessagesAlert } from "../redux/reducers/chat";
+import { TypingLoader } from "../components/layout/Loaders";
 
 
 
 const Chat = ({ chatId, user }) => {
   const containerRef = useRef(null);
+  const bottomRef = useRef(null);
+
 
   const socket = getSocket();
 
@@ -31,6 +41,9 @@ const Chat = ({ chatId, user }) => {
   const [page, setPage] = useState(1);
   const [fileMenuAnchor, setFileMenuAnchor] = useState(null);
 
+  const [IamTyping, setIamTyping] = useState(false);
+  const [userTyping, setUserTyping] = useState(false);
+  const typingTimeout = useRef(null);
 
   const chatDetails = useChatDetailsQuery({ chatId, skip: !chatId });
 
@@ -51,6 +64,22 @@ const Chat = ({ chatId, user }) => {
 
   const members = chatDetails?.data?.chat?.members;
 
+  const messageOnChange = (e) => {
+    setMessage(e.target.value);
+
+    if (!IamTyping) {
+      socket.emit(START_TYPING, { members, chatId });
+      setIamTyping(true);
+    }
+
+    if (typingTimeout.current) clearTimeout(typingTimeout.current);
+
+    typingTimeout.current = setTimeout(() => {
+      socket.emit(STOP_TYPING, { members, chatId });
+      setIamTyping(false);
+    }, [2000]);
+  };
+
   const submitHandler = (e) => {
     e.preventDefault();
 
@@ -61,6 +90,28 @@ const Chat = ({ chatId, user }) => {
     setMessage("");
   };
 
+  useEffect(() => {
+    socket.emit(CHAT_JOINED, { userId: user._id, members });
+    dispatch(removeNewMessagesAlert(chatId));
+
+    return () => {
+      setMessages([]);
+      setMessage("");
+      setOldMessages([]);
+      setPage(1);
+      socket.emit(CHAT_LEAVED, { userId: user._id, members });
+    };
+  }, [chatId]);
+
+  useEffect(() => {
+    if (bottomRef.current)
+      bottomRef.current.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  useEffect(() => {
+    if (chatDetails.isError) return navigate("/");
+  }, [chatDetails.isError]);
+
   const newMessagesListener = useCallback(
     (data) => {
       if (data.chatId !== chatId) return;
@@ -70,17 +121,38 @@ const Chat = ({ chatId, user }) => {
     [chatId]
   );
 
+  const startTypingListener = useCallback(
+    (data) => {
+      if (data.chatId !== chatId) return;
+
+      setUserTyping(true);
+    },
+    [chatId]
+  );
+
+  const stopTypingListener = useCallback(
+    (data) => {
+      if (data.chatId !== chatId) return;
+      setUserTyping(false);
+    },
+    [chatId]
+  );
+
   const handleFileOpen = (e) => {
     dispatch(setIsFileMenu(true));
     setFileMenuAnchor(e.currentTarget);
   };
 
-  const eventHandler = { [NEW_MESSAGE]: newMessagesListener };
+  const eventHandler = {
+    [NEW_MESSAGE]: newMessagesListener,
+    [START_TYPING]: startTypingListener,
+    [STOP_TYPING]: stopTypingListener,
+  };
 
   useSocketEvents(socket, eventHandler);
 
   useErrors(errors);
-  const allMessages = [...oldMessages,...messages];
+  const allMessages = [...oldMessages, ...messages];
 
   return chatDetails.isLoading ? (
     <Skeleton />
@@ -98,10 +170,12 @@ const Chat = ({ chatId, user }) => {
           overflowY: "auto",
         }}
       >
-       
         {allMessages.map((i) => (
           <MessageComponent key={i._id} message={i} user={user} />
         ))}
+        {userTyping && <TypingLoader />}
+
+        <div ref={bottomRef} />
       </Stack>
 
       <form
@@ -131,7 +205,7 @@ const Chat = ({ chatId, user }) => {
           <InputBox
             placeholder="Type Message Here...."
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={messageOnChange}
           />
 
           <IconButton
@@ -152,7 +226,7 @@ const Chat = ({ chatId, user }) => {
         </Stack>
       </form>
 
-      <FileMenu anchorE1={fileMenuAnchor} />
+      <FileMenu anchorE1={fileMenuAnchor} chatId={chatId} />
     </>
   );
 };
