@@ -120,6 +120,8 @@ const AppLayout = () =>(WrappedComponent) => {
             chats={data?.chats} 
             chatId={chatId}
             handlleDeleteChat={handleDeleteChat}
+            newMessagesAlert={newMessagesAlert}
+
             />
             )}
             </Grid>

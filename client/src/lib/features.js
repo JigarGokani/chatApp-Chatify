@@ -17,8 +17,11 @@ const fileFormat = (url = "") =>{
 
 
 const transformImage = (url = "", width = 100) => {
-  const newUrl = url.replace("upload/", `upload/dpr_auto/w_${width}/`);
+  if (typeof url !== "string") {
+    return url; // or handle the error appropriately
+  }
 
+  const newUrl = url.replace("upload/", `upload/dpr_auto/w_${width}/`);
   return newUrl;
 };
 

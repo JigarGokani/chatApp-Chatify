@@ -2,10 +2,24 @@ import { Button, Dialog, DialogTitle, Stack, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { sampleUsers } from "../../constants/sampleData";
 import UserItem from "../shared/UserItem";
+import { useAddGroupMembersMutation } from "../../redux/api/api";
+import { useAsyncMutation } from "../../hooks/hook";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsAddMember } from "../../redux/reducers/misc";
 
-const AddMemberDialog = ({ addMember, isLoadingAddMember, chatId }) => {
+const AddMemberDialog = ({ chatId }) => {
+
+  const dispatch = useDispatch();
 
     const [members,setMembers] = useState(sampleUsers)
+
+    const { isAddMember } = useSelector((state) => state.misc);
+
+
+    const [addMembers, isLoadingAddMembers] = useAsyncMutation(
+      useAddGroupMembersMutation
+    );
+
     const [selectedMembers,setSelectedMembers] = useState([])
   
     const selectMemberHandler =(id)=>{
@@ -17,17 +31,17 @@ const AddMemberDialog = ({ addMember, isLoadingAddMember, chatId }) => {
   
     }
 
-  const addMemberSubmitHandler = () =>{
-     closeHandler()
-  }
+    const addMemberSubmitHandler = () => {
+      addMembers("Adding Members...", { members: selectedMembers, chatId });
+      closeHandler();
+    };
 
   const closeHandler = () =>{
-    setSelectedMembers([])
-    setMembers([])
+    dispatch(setIsAddMember(false));
   }
 
   return (
-    <Dialog open onClose={closeHandler}>
+    <Dialog open={isAddMember} onClose={closeHandler}>
       <Stack p={"2rem"} width={"20rem"} spacing={"2rem"}>
         <DialogTitle textAlign={"center"}>Add Members</DialogTitle>
         <Stack spacing={"1rem"}>
@@ -47,7 +61,7 @@ const AddMemberDialog = ({ addMember, isLoadingAddMember, chatId }) => {
 
             >
                 <Button color="error" onClick={closeHandler}>Cancel</Button>
-                <Button onClick={addMemberSubmitHandler} variant="contained" disabled={isLoadingAddMember}>Submit Changes</Button>
+                <Button onClick={addMemberSubmitHandler} variant="contained" disabled={isLoadingAddMembers}>Submit Changes</Button>
             </Stack>
            
       </Stack>
