@@ -3,6 +3,7 @@ import {
   Backdrop,
   Box,
   Button,
+  CircularProgress,
   Drawer,
   Grid,
   IconButton,
@@ -27,7 +28,7 @@ import UserItem from "../components/shared/UserItem";
 import { LayoutLoader } from "../components/layout/Loaders";
 
 import { bgGradient } from "../constants/color";
-import { useChatDetailsQuery, useMyGroupsQuery, useRemoveGroupMemberMutation, useRenameGroupMutation } from "../redux/api/api";
+import { useChatDetailsQuery, useDeleteChatMutation, useMyGroupsQuery, useRemoveGroupMemberMutation, useRenameGroupMutation } from "../redux/api/api";
 import { useAsyncMutation, useErrors } from "../hooks/hook";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsAddMember } from "../redux/reducers/misc";
@@ -64,6 +65,10 @@ const { isAddMember } = useSelector((state) => state.misc);
 
   const [removeMember, isLoadingRemoveMember] = useAsyncMutation(
     useRemoveGroupMemberMutation
+  );
+
+  const [deleteGroup, isLoadingDeleteGroup] = useAsyncMutation(
+    useDeleteChatMutation
   );
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -140,8 +145,10 @@ const { isAddMember } = useSelector((state) => state.misc);
   };
 
   const deleteHandler = () => {
+    deleteGroup("Deleting Group...", chatId);
     closeConfirmDeleteHandler();
-  }
+    navigate("/groups");
+  };
 
   const removeMemberHandler = (userId) => {
     removeMember("Removing Member...", { chatId, userId });
@@ -314,7 +321,7 @@ const { isAddMember } = useSelector((state) => state.misc);
               overflow={"auto"}
             >
               {/* Members */}
-              {
+              {isLoadingRemoveMember ? (<CircularProgress/>):
                 members.map((i)=>(
                   <UserItem user={i} key={i._id} isAdded styling={{
                     boxShadow:"0 0 0.5rem rgba(0,0,0,0.2)",
