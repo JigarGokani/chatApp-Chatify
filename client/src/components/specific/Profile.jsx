@@ -8,7 +8,7 @@ const Profile = ({user}) => {
   return (
     <Stack
     spacing={"2rem"}
-    height={"100vh"}
+    height={"80vh"}
     direction={"column"}
     alignItems={"center"}
     >

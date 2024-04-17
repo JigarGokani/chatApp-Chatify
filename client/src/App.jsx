@@ -38,8 +38,9 @@ const App = () => {
   return loader ? (
     <LayoutLoader />
   ) : (
-    <BrowserRouter>
-      <Suspense fallback={<LayoutLoader />}>
+    <BrowserRouter >
+    <div style={{overflowY:"auto"}}>
+    <Suspense fallback={<LayoutLoader />}>
         <Routes>
           <Route
             element={
@@ -72,6 +73,8 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
+    </div>
+     
       <Toaster />
     </BrowserRouter>
   );

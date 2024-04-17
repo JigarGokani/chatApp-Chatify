@@ -91,6 +91,7 @@ const AppLayout = () => (WrappedComponent) => {
 
     return (
       <>
+      
         <Title />
         <Header />
 

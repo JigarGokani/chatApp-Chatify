@@ -12,7 +12,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <HelmetProvider>
       <CssBaseline/>
       <div onContextMenu={(e)=>e.preventDefault()}>
-      <App />
+      <App/>
       </div>
     </HelmetProvider>
   </Provider>
