@@ -55,7 +55,7 @@ app.use(cors(corsOptions))
 // Mouting the routes
 app.use("/api/v1/user",userRoute);
 app.use("/api/v1/chat",chatRoute);
-app.use("api/v1/admin",adminRoute);
+app.use("/api/v1/admin",adminRoute);
 
 
 

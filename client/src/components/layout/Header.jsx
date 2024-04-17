@@ -88,7 +88,7 @@ import {
                   display: { xs: "none", sm: "block" },
                 }}
               >
-                Chattu
+                Chatify
               </Typography>
   
               <Box

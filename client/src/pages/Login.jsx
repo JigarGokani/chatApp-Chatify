@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useFileHandler, useInputValidation } from "6pp";
+import { CameraAlt as CameraAltIcon } from "@mui/icons-material";
 import {
   Avatar,
   Button,
@@ -9,16 +10,15 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { CameraAlt as CameraAltIcon } from "@mui/icons-material";
-import { VisuallyHiddenInput } from "../components/styles/StyledComponents";
-import { useFileHandler, useInputValidation } from "6pp";
-import { usernameValidator } from "../utils/validators";
-import { bgGradient } from "../constants/color";
 import axios from "axios";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { userExists } from "../redux/reducers/auth";
+import { VisuallyHiddenInput } from "../components/styles/StyledComponents";
+import { bgGradient } from "../constants/color";
 import { server } from "../constants/config";
+import { userExists } from "../redux/reducers/auth";
+import { usernameValidator } from "../utils/validators";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -32,7 +32,9 @@ const Login = () => {
   const password = useInputValidation("");
 
   const avatar = useFileHandler("single");
+
   const dispatch = useDispatch();
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -165,11 +167,14 @@ const Login = () => {
                 />
 
                 <Button
-                  fullWidth
-                  sx={{ marginTop: "1rem" }}
+                  sx={{
+                    marginTop: "1rem",
+                  }}
                   variant="contained"
                   color="primary"
                   type="submit"
+                  fullWidth
+                  disabled={isLoading}
                 >
                   Login
                 </Button>
@@ -177,10 +182,9 @@ const Login = () => {
                 <Typography textAlign={"center"} m={"1rem"}>
                   OR
                 </Typography>
+
                 <Button
-                  sx={{
-                    marginTop: "1rem",
-                  }}
+                  disabled={isLoading}
                   fullWidth
                   variant="text"
                   onClick={toggleLogin}
@@ -209,12 +213,6 @@ const Login = () => {
                     src={avatar.preview}
                   />
 
-                  {avatar.error && (
-                    <Typography color="error" variant="caption">
-                      {avatar.error}
-                    </Typography>
-                  )}
-
                   <IconButton
                     sx={{
                       position: "absolute",
@@ -237,6 +235,19 @@ const Login = () => {
                     </>
                   </IconButton>
                 </Stack>
+
+                {avatar.error && (
+                  <Typography
+                    m={"1rem auto"}
+                    width={"fit-content"}
+                    display={"block"}
+                    color="error"
+                    variant="caption"
+                  >
+                    {avatar.error}
+                  </Typography>
+                )}
+
                 <TextField
                   required
                   fullWidth
@@ -256,7 +267,6 @@ const Login = () => {
                   value={bio.value}
                   onChange={bio.changeHandler}
                 />
-
                 <TextField
                   required
                   fullWidth
@@ -285,11 +295,14 @@ const Login = () => {
                 />
 
                 <Button
-                  fullWidth
-                  sx={{ marginTop: "1rem" }}
+                  sx={{
+                    marginTop: "1rem",
+                  }}
                   variant="contained"
                   color="primary"
                   type="submit"
+                  fullWidth
+                  disabled={isLoading}
                 >
                   Sign Up
                 </Button>
@@ -297,10 +310,9 @@ const Login = () => {
                 <Typography textAlign={"center"} m={"1rem"}>
                   OR
                 </Typography>
+
                 <Button
-                  sx={{
-                    marginTop: "1rem",
-                  }}
+                  disabled={isLoading}
                   fullWidth
                   variant="text"
                   onClick={toggleLogin}
