@@ -9,6 +9,7 @@ const cookieOptions = {
     sameSite:"None",
     httpOnly:true,
     secure:true,
+    Partitioned,
 }
 
 const connectDB = (url) =>{
