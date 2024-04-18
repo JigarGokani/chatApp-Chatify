@@ -7,7 +7,7 @@ import { User } from "../models/user.js";
 
 
 const isAuthenticated = TryCatch((req, res, next) => {
-    const token = req.cookies[CHATIFY_TOKEN];
+    const token = req.cookies[chatify-token];
     if (!token)
       return next(new ErrorHandler("Please login to access this route", 401));
   
