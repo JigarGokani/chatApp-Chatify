@@ -9,7 +9,7 @@ import { User } from "../models/user.js";
 const isAuthenticated = TryCatch((req, res, next) => {
     const token = req.cookies[CHATIFY_TOKEN];
     if (!token)
-      return next(new ErrorHandler("Please login to access this route", 401));
+      return next(new ErrorHandler("Please login to access this route 1", 401));
   
     const decodedData = jwt.verify(token, process.env.JWT_SECRET);
     console.log(decodedData);
@@ -23,7 +23,7 @@ const isAuthenticated = TryCatch((req, res, next) => {
     const token = req.cookies["chatify-admin-token"];
   
     if (!token)
-      return next(new ErrorHandler("Only Admin can access this route", 401));
+      return next(new ErrorHandler("Only Admin can access this route 2", 401));
   
     const secretKey = jwt.verify(token, process.env.JWT_SECRET);
 
@@ -32,7 +32,7 @@ const isAuthenticated = TryCatch((req, res, next) => {
     const isMatched = secretKey === adminSecretKey;
   
     if (!isMatched)
-      return next(new ErrorHandler("Only Admin can access this route", 401));
+      return next(new ErrorHandler("Only Admin can access this route 3", 401));
   
     next();
   };
@@ -44,21 +44,21 @@ const isAuthenticated = TryCatch((req, res, next) => {
       const authToken = socket.request.cookies[CHATIFY_TOKEN];
   
       if (!authToken)
-        return next(new ErrorHandler("Please login to access this route", 401));
+        return next(new ErrorHandler("Please login to access this route 4", 401));
   
       const decodedData = jwt.verify(authToken, process.env.JWT_SECRET);
   
       const user = await User.findById(decodedData._id);
   
       if (!user)
-        return next(new ErrorHandler("Please login to access this route", 401));
+        return next(new ErrorHandler("Please login to access this route 5", 401));
   
       socket.user = user;
   
       return next();
     } catch (error) {
       console.log(error);
-      return next(new ErrorHandler("Please login to access this route", 401));
+      return next(new ErrorHandler("Please login to access this route 6", 401));
     }
   };
 
